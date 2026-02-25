@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fishing Master V3 - RIZKY's Edition</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>🎣 FISHING MASTER V3</h1>
+            <div class="developer-credit">
+                <i class="fas fa-code"></i> Created by <span class="dev-name">RIZKY</span> <i class="fas fa-crown"></i>
+            </div>
+            
+            <!-- STATS GRID -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-coins"></i>
+                    <span class="stat-label">Uang:</span>
+                    <span class="stat-value" id="money">1000</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-fish"></i>
+                    <span class="stat-label">Umpan:</span>
+                    <span class="stat-value" id="bait">50</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-fish"></i>
+                    <span class="stat-label">Ikan:</span>
+                    <span class="stat-value" id="fishCount">0</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-star"></i>
+                    <span class="stat-label">Level:</span>
+                    <span class="stat-value" id="level">1</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-dice"></i>
+                    <span class="stat-label">Lucky Point:</span>
+                    <span class="stat-value" id="luckyPoint">0</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-gem"></i>
+                    <span class="stat-label">Spin Left:</span>
+                    <span class="stat-value" id="spinLeft">3</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME AREA -->
+        <div class="game-area">
+            <canvas id="gameCanvas" width="900" height="500"></canvas>
+            
+            <!-- PANCINGAN CONTROLS -->
+            <div class="fishing-controls">
+                <div class="rod-selection">
+                    <h3>Pilih Pancingan:</h3>
+                    <div class="rod-grid">
+                        <div class="rod-card" id="rodBasic" onclick="selectRod('basic')">
+                            <i class="fas fa-fishing-rod"></i>
+                            <h4>Basic Rod</h4>
+                            <p>Kekuatan: 1x</p>
+                            <p>Lucky: +0%</p>
+                        </div>
+                        <div class="rod-card" id="rodSilver" onclick="selectRod('silver')">
+                            <i class="fas fa-fishing-rod"></i>
+                            <h4>Silver Rod</h4>
+                            <p>Kekuatan: 1.5x</p>
+                            <p>Lucky: +10%</p>
+                            <p class="price">💰 500</p>
+                        </div>
+                        <div class="rod-card" id="rodGolden" onclick="selectRod('golden')">
+                            <i class="fas fa-fishing-rod"></i>
+                            <h4>Golden Rod</h4>
+                            <p>Kekuatan: 2x</p>
+                            <p>Lucky: +25%</p>
+                            <p class="price">💰 1500</p>
+                        </div>
+                        <div class="rod-card" id="rodDiamond" onclick="selectRod('diamond')">
+                            <i class="fas fa-fishing-rod"></i>
+                            <h4>Diamond Rod</h4>
+                            <p>Kekuatan: 3x</p>
+                            <p>Lucky: +50%</p>
+                            <p class="price">💰 5000</p>
+                        </div>
+                        <div class="rod-card" id="rodLegendary" onclick="selectRod('legendary')">
+                            <i class="fas fa-fishing-rod"></i>
+                            <h4>🐉 Legendary Rod</h4>
+                            <p>Kekuatan: 5x</p>
+                            <p>Lucky: +100%</p>
+                            <p class="price">💎 100 Gems</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hook-selection">
+                    <h3>Pilih Mata Kail:</h3>
+                    <div class="hook-grid">
+                        <div class="hook-card" id="hookBasic" onclick="selectHook('basic')">
+                            <i class="fas fa-hook"></i>
+                            <h4>Basic Hook</h4>
+                            <p>Catch Rate: 50%</p>
+                        </div>
+                        <div class="hook-card" id="hookSharp" onclick="selectHook('sharp')">
+                            <i class="fas fa-hook"></i>
+                            <h4>Sharp Hook</h4>
+                            <p>Catch Rate: 65%</p>
+                            <p class="price">💰 300</p>
+                        </div>
+                        <div class="hook-card" id="hookBarbed" onclick="selectHook('barbed')">
+                            <i class="fas fa-hook"></i>
+                            <h4>Barbed Hook</h4>
+                            <p>Catch Rate: 80%</p>
+                            <p class="price">💰 800</p>
+                        </div>
+                        <div class="hook-card" id="hookMagnetic" onclick="selectHook('magnetic')">
+                            <i class="fas fa-magnet"></i>
+                            <h4>Magnetic Hook</h4>
+                            <p>Catch Rate: 95%</p>
+                            <p class="price">💰 2000</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="action-buttons">
+                <button id="castBtn" class="btn primary">
+                    <i class="fas fa-fishing-rod"></i> Lemparkan Pancing
+                </button>
+                <button id="reelBtn" class="btn success" disabled>
+                    <i class="fas fa-hand-rock"></i> Tarik Pancing
+                </button>
+                <button id="shopBtn" class="btn info">
+                    <i class="fas fa-store"></i> Toko
+                </button>
+                <button id="luckyBtn" class="btn lucky">
+                    <i class="fas fa-dice"></i> Lucky Spin
+                </button>
+                <button id="shopeefoodBtn" class="btn shopeefood">
+                    <i class="fas fa-utensils"></i> ShopeeFood
+                </button>
+                <button id="modBtn" class="btn warning">
+                    <i class="fas fa-code"></i> MOD Menu
+                </button>
+            </div>
+
+            <div id="message" class="message"></div>
+        </div>
+
+        <!-- LEADERBOARD SECTION -->
+        <div class="leaderboard-section">
+            <div class="leaderboard-header">
+                <h2><i class="fas fa-trophy"></i> FISHING STATS & LEADERBOARD</h2>
+            </div>
+            
+            <div class="stats-container">
+                <!-- PLAYER STATS -->
+                <div class="player-stats">
+                    <h3><i class="fas fa-user"></i> STATISTIK PEMAIN</h3>
+                    <div class="player-stat-grid">
+                        <div class="player-stat-item">
+                            <span class="stat-icon">🎣</span>
+                            <span class="stat-label">Total Pancingan:</span>
+                            <span class="stat-value" id="totalCasts">0</span>
+                        </div>
+                        <div class="player-stat-item">
+                            <span class="stat-icon">🐟</span>
+                            <span class="stat-label">Total Ikan:</span>
+                            <span class="stat-value" id="totalFish">0</span>
+                        </div>
+                        <div class="player-stat-item">
+                            <span class="stat-icon">💰</span>
+                            <span class="stat-label">Total Uang:</span>
+                            <span class="stat-value" id="totalMoney">0</span>
+                        </div>
+                        <div class="player-stat-item">
+                            <span class="stat-icon">⭐</span>
+                            <span class="stat-label">Total Point:</span>
+                            <span class="stat-value highlight" id="totalPoints">0</span>
+                        </div>
+                        <div class="player-stat-item">
+                            <span class="stat-icon">🐉</span>
+                            <span class="stat-label">Ikan Legendaris:</span>
+                            <span class="stat-value" id="legendaryCount">0</span>
+                        </div>
+                        <div class="player-stat-item">
+                            <span class="stat-icon">🏆</span>
+                            <span class="stat-label">Achievement:</span>
+                            <span class="stat-value" id="achievementCount">0/7</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- POINT CALCULATION -->
+                <div class="point-calculation">
+                    <h3><i class="fas fa-calculator"></i> RUMUS POINT</h3>
+                    <div class="point-formula">
+                        <p><strong>Total Point = (Ikan x 10) + (Uang / 100) + (Legendaris x 1000) + (Level x 500)</strong></p>
+                        <div class="point-breakdown" id="pointBreakdown"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ACHIEVEMENTS -->
+            <div class="achievements-container">
+                <h3><i class="fas fa-medal"></i> ACHIEVEMENTS</h3>
+                <div class="achievements-grid" id="achievementsGrid"></div>
+            </div>
+            
+            <!-- GLOBAL LEADERBOARD -->
+            <div class="global-leaderboard">
+                <h3><i class="fas fa-globe"></i> GLOBAL LEADERBOARD</h3>
+                <div class="leaderboard-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Player</th>
+                                <th>Total Point</th>
+                                <th>Ikan</th>
+                                <th>Legendaris</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="footer-credit">
+                <i class="fas fa-copyright"></i> 2026 Fishing Master V3 - Developed by <span class="dev-name-footer">RIZKY</span>
+            </div>
+        </div>
+
+        <!-- LUCKY SPIN MODAL -->
+        <div id="luckyModal" class="modal">
+            <div class="modal-content lucky-modal">
+                <span class="close">&times;</span>
+                <h2><i class="fas fa-dice"></i> LUCKY SPIN</h2>
+                <div class="wheel-container">
+                    <canvas id="wheelCanvas" width="400" height="400"></canvas>
+                    <button id="spinBtn" class="btn lucky">SPIN (1 Lucky Point)</button>
+                </div>
+                <div class="prize-pool">
+                    <h3>Hadiah:</h3>
+                    <div class="prize-grid">
+                        <div class="prize-item">💰 1000 Uang</div>
+                        <div class="prize-item">💰 5000 Uang</div>
+                        <div class="prize-item">🎣 50 Umpan</div>
+                        <div class="prize-item">💎 10 Gems</div>
+                        <div class="prize-item">⭐ 5 Lucky Point</div>
+                        <div class="prize-item">🦈 Ikan Legendaris</div>
+                        <div class="prize-item">🌈 Rainbow Rod</div>
+                        <div class="prize-item">❌ Zonk</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SHOPEEFOOD MODAL -->
+        <div id="shopeefoodModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2><i class="fas fa-utensils"></i> ShopeeFood - Beli Umpan Spesial</h2>
+                <div class="shopeefood-items">
+                    <div class="food-item">
+                        <img src="assets/images/placeholder.jpg" alt="Food">
+                        <h3>🍔 Burger Combo</h3>
+                        <p>+20 Umpan +5 Lucky Point</p>
+                        <p class="price">💰 15,000</p>
+                        <button onclick="buyShopeeFood('burger')">Beli</button>
+                    </div>
+                    <div class="food-item">
+                        <img src="assets/images/placeholder.jpg" alt="Food">
+                        <h3>🍣 Sushi Set</h3>
+                        <p>+30 Umpan +10 Lucky Point</p>
+                        <p class="price">💰 25,000</p>
+                        <button onclick="buyShopeeFood('sushi')">Beli</button>
+                    </div>
+                    <div class="food-item">
+                        <img src="assets/images/placeholder.jpg" alt="Food">
+                        <h3>🍜 Seafood Platter</h3>
+                        <p>+50 Umpan +20 Lucky Point</p>
+                        <p class="price">💰 50,000</p>
+                        <button onclick="buyShopeeFood('seafood')">Beli</button>
+                    </div>
+                    <div class="food-item">
+                        <img src="assets/images/placeholder.jpg" alt="Food">
+                        <h3>🎣 Fishing Combo</h3>
+                        <p>+100 Umpan + All Items</p>
+                        <p class="price">💰 100,000</p>
+                        <button onclick="buyShopeeFood('fishing')">Beli</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SHOP MODAL -->
+        <div id="shopModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>🏪 Toko Alat Pancing</h2>
+                <div class="shop-items">
+                    <div class="item">
+                        <i class="fas fa-fish"></i>
+                        <h3>Umpan Biasa</h3>
+                        <p>+5 umpan</p>
+                        <p class="price">💰 100</p>
+                        <button onclick="buyItem('bait', 5, 100)">Beli</button>
+                    </div>
+                    <div class="item">
+                        <i class="fas fa-fish"></i>
+                        <h3>Umpan Super</h3>
+                        <p>+10 umpan, +5 lucky point</p>
+                        <p class="price">💰 250</p>
+                        <button onclick="buyItem('superBait', 10, 250)">Beli</button>
+                    </div>
+                    <div class="item">
+                        <i class="fas fa-fishing-rod"></i>
+                        <h3>Pancing Emas</h3>
+                        <p>Kekuatan +50%</p>
+                        <p class="price">💰 500</p>
+                        <button onclick="buyItem('goldenRod', 1, 500)">Beli</button>
+                    </div>
+                    <div class="item">
+                        <i class="fas fa-hook"></i>
+                        <h3>Mata Kail Tajam</h3>
+                        <p>+15% catch rate</p>
+                        <p class="price">💰 300</p>
+                        <button onclick="buyItem('sharpHook', 1, 300)">Beli</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOD MENU -->
+        <div id="modModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>⚡ MOD MENU</h2>
+                <div class="mod-items">
+                    <div class="mod-section">
+                        <h3><i class="fas fa-coins"></i> Money & Resources</h3>
+                        <button onclick="modMoney(999999)">💰 Uang Maks</button>
+                        <button onclick="modBait(999)">🎣 Umpan Maks</button>
+                        <button onclick="modLuckyPoint(999)">⭐ Lucky Point Maks</button>
+                    </div>
+                    <div class="mod-section">
+                        <h3><i class="fas fa-fishing-rod"></i> Unlock All</h3>
+                        <button onclick="unlockAllRods()">🔓 Buka Semua Pancing</button>
+                        <button onclick="unlockAllHooks()">🔓 Buka Semua Mata Kail</button>
+                    </div>
+                    <div class="mod-section">
+                        <h3><i class="fas fa-bolt"></i> Game Modifiers</h3>
+                        <button onclick="toggleGodMode()">👑 God Mode</button>
+                        <button onclick="toggleInfiniteSpin()">🎰 Infinite Spin</button>
+                        <button onclick="spawnRareFish()">🐉 Rare Fish Only</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
+<!-- BOAT & DIVING SECTION -->
+<div class="boat-section">
+    <div class="boat-header">
+        <h2><i class="fas fa-ship"></i> PERAHU & ALAT SELAM SULTAN</h2>
+        <div class="boat-stats">
+            <div class="boat-stat">
+                <i class="fas fa-ship"></i>
+                <span id="currentBoatName">Raft</span>
+            </div>
+            <div class="boat-stat">
+                <i class="fas fa-gas-pump"></i>
+                <span id="boatFuel">100</span>%
+            </div>
+            <div class="boat-stat">
+                <i class="fas fa-water"></i>
+                <span id="boatDepth">0</span> m
+            </div>
+            <div class="boat-stat">
+                <i class="fas fa-mask"></i>
+                <span id="currentGearName">Mask Biasa</span>
+            </div>
+            <div class="boat-stat">
+                <i class="fas fa-wind"></i>
+                <span id="oxygenLevel">100</span>%
+            </div>
+        </div>
+    </div>
+    
+    <!-- Perahu Collection -->
+    <div class="boats-container">
+        <h3><i class="fas fa-ship"></i> PERAHU COLLECTION</h3>
+        <div class="boats-grid" id="boatsGrid"></div>
+    </div>
+    
+    <!-- Diving Gear Collection -->
+    <div class="gear-container">
+        <h3><i class="fas fa-mask"></i> ALAT SELAM COLLECTION</h3>
+        <div class="gear-grid" id="gearGrid"></div>
+    </div>
+    
+    <!-- Underwater Exploration -->
+    <div class="explore-container">
+        <h3><i class="fas fa-water"></i> UNDERWATER EXPLORATION</h3>
+        <div class="explore-controls">
+            <button id="diveBtn" class="btn ocean" onclick="startDiving()">
+                <i class="fas fa-water"></i> MENYELAM
+            </button>
+            <button id="surfaceBtn" class="btn warning" onclick="surface()" disabled>
+                <i class="fas fa-arrow-up"></i> MUNCUL
+            </button>
+            <button id="searchTreasureBtn" class="btn success" onclick="searchTreasure()" disabled>
+                <i class="fas fa-search"></i> CARI HARTA
+            </button>
+        </div>
+        
+        <div class="depth-indicator">
+            <div class="depth-bar">
+                <div class="depth-fill" id="depthFill" style="width: 0%"></div>
+            </div>
+            <span id="depthText">Permukaan</span>
+        </div>
+        
+        <div class="treasure-hint" id="treasureHint">
+            🐟 Ada harta di kedalaman 1000m!
+        </div>
+    </div>
+    
+    <!-- Sultan Shop -->
+    <div class="sultan-shop">
+        <h3><i class="fas fa-crown"></i> SULTAN SHOP</h3>
+        <div class="sultan-items" id="sultanItems"></div>
+    </div>
+</div>

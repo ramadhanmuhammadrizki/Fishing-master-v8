@@ -1,0 +1,664 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0a1f2e, #1b4f6e);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.game-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 30px;
+    padding: 25px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    max-width: 1400px;
+    width: 100%;
+}
+
+.header h1 {
+    color: #0a1f2e;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 2.8em;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.1);
+}
+
+.developer-credit {
+    background: linear-gradient(135deg, #ffd700, #ffaa00);
+    padding: 8px 20px;
+    border-radius: 50px;
+    display: inline-block;
+    margin: 0 auto 15px;
+    font-weight: bold;
+    color: #0a1f2e;
+    box-shadow: 0 5px 15px rgba(255,215,0,0.3);
+    text-align: center;
+    width: fit-content;
+}
+
+.dev-name {
+    color: #8b0000;
+    font-size: 1.2em;
+    margin: 0 5px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    background: linear-gradient(135deg, #1b4f6e, #2a6f96);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: inset 0 2px 5px rgba(255,255,255,0.3);
+}
+
+.stat-card {
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+.stat-card i { font-size: 24px; color: #1b4f6e; }
+.stat-label { font-size: 12px; color: #666; }
+.stat-value { font-size: 20px; font-weight: bold; color: #0a1f2e; }
+
+.game-area { position: relative; margin: 20px 0; }
+#gameCanvas {
+    width: 100%;
+    height: auto;
+    background: linear-gradient(to bottom, #4a90e2, #1e5799);
+    border-radius: 20px;
+    border: 5px solid #1b4f6e;
+}
+
+.fishing-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.rod-selection, .hook-selection {
+    background: #f0f8ff;
+    padding: 15px;
+    border-radius: 15px;
+    border: 2px solid #1b4f6e;
+}
+
+.rod-grid, .hook-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.rod-card, .hook-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid transparent;
+}
+
+.rod-card:hover, .hook-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.rod-card.selected, .hook-card.selected {
+    border-color: #ffd700;
+    background: #fff5e6;
+}
+
+.price { color: #28a745; font-weight: bold; margin-top: 5px; }
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+.btn:hover { transform: translateY(-3px); }
+
+.btn.primary { background: #1b4f6e; color: white; }
+.btn.success { background: #28a745; color: white; }
+.btn.info { background: #17a2b8; color: white; }
+.btn.lucky { background: #ffc107; color: #0a1f2e; }
+.btn.shopeefood { background: #ee4d2d; color: white; }
+.btn.warning { background: #6f42c1; color: white; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.message {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.message.success { background: #d4edda; color: #155724; }
+.message.error { background: #f8d7da; color: #721c24; }
+.message.info { background: #d1ecf1; color: #0c5460; }
+
+.leaderboard-section {
+    background: #1a3a4e;
+    border-radius: 20px;
+    padding: 25px;
+    margin-top: 30px;
+    border: 2px solid #ffd700;
+}
+
+.leaderboard-header h2 { color: #ffd700; text-align: center; margin-bottom: 20px; }
+
+.stats-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.player-stats, .point-calculation {
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.player-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.player-stat-item {
+    background: rgba(0,0,0,0.3);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.stat-icon { font-size: 24px; display: block; }
+.stat-label { font-size: 12px; color: #aaa; }
+.stat-value { font-size: 18px; color: #ffd700; font-weight: bold; }
+.stat-value.highlight { color: #ff6b6b; font-size: 22px; }
+
+.point-formula {
+    background: rgba(0,0,0,0.3);
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.achievement-card {
+    background: #2a4a5e;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #ffd700;
+    opacity: 0.5;
+}
+
+.achievement-card.unlocked {
+    opacity: 1;
+    background: #3a6a8e;
+    box-shadow: 0 0 20px rgba(255,215,0,0.3);
+}
+
+.achievement-icon { font-size: 30px; }
+.achievement-name { font-weight: bold; color: white; }
+
+.leaderboard-table {
+    overflow-x: auto;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.leaderboard-table table { width: 100%; border-collapse: collapse; }
+.leaderboard-table th {
+    background: #ffd700;
+    color: #0a1f2e;
+    padding: 12px;
+}
+.leaderboard-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,215,0,0.2);
+    color: white;
+}
+.rank-1 td:first-child { color: #ffd700; }
+.rank-2 td:first-child { color: #c0c0c0; }
+.rank-3 td:first-child { color: #cd7f32; }
+
+.footer-credit {
+    text-align: center;
+    margin-top: 20px;
+    color: #aaa;
+    font-size: 12px;
+}
+.dev-name-footer { color: #ffd700; font-weight: bold; }
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+    background: white;
+    margin: 3% auto;
+    padding: 30px;
+    border-radius: 30px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.close {
+    float: right;
+    font-size: 32px;
+    cursor: pointer;
+}
+.close:hover { color: #ffd700; }
+
+.shop-items, .mod-items, .shopeefood-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.item, .mod-section, .food-item {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.item button, .mod-section button, .food-item button {
+    background: #1b4f6e;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.mod-section { background: #1b4f6e; color: white; }
+.mod-section button { background: white; color: #0a1f2e; }
+
+.food-item { border: 2px solid #ee4d2d; }
+.food-item button { background: #ee4d2d; }
+
+#wheelCanvas { width: 100%; max-width: 400px; height: auto; }
+.prize-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+.prize-item {
+    background: #ffd700;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .stats-container { grid-template-columns: 1fr; }
+    .fishing-controls { grid-template-columns: 1fr; }
+}
+/* Boat & Diving Section */
+.boat-section {
+    background: linear-gradient(135deg, #0a4a6e, #0a2a4e);
+    border-radius: 20px;
+    padding: 25px;
+    margin: 30px 0;
+    border: 3px solid #00ffff;
+    box-shadow: 0 0 30px rgba(0,255,255,0.3);
+}
+
+.boat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.boat-header h2 {
+    color: #00ffff;
+    font-size: 2em;
+    text-shadow: 0 0 10px rgba(0,255,255,0.5);
+}
+
+.boat-stats {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.boat-stat {
+    background: rgba(0,255,255,0.2);
+    padding: 8px 15px;
+    border-radius: 20px;
+    color: white;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.boat-stat i {
+    color: #00ffff;
+}
+
+.boats-grid, .gear-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.boat-card, .gear-card {
+    background: linear-gradient(135deg, #1a4a6e, #0a2a4e);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid #00ffff;
+    transition: all 0.3s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.boat-card:hover, .gear-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,255,255,0.3);
+}
+
+.boat-card.selected, .gear-card.selected {
+    border-color: #ffd700;
+    box-shadow: 0 0 20px #ffd700;
+}
+
+.boat-card.owned, .gear-card.owned {
+    opacity: 1;
+}
+
+.boat-card:not(.owned), .gear-card:not(.owned) {
+    opacity: 0.7;
+    filter: grayscale(0.5);
+}
+
+.boat-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.boat-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #00ffff;
+    margin-bottom: 5px;
+}
+
+.boat-desc {
+    font-size: 12px;
+    color: #aaa;
+    margin-bottom: 10px;
+}
+
+.boat-stats-detail {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    font-size: 12px;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.boat-stats-detail span {
+    background: rgba(255,255,255,0.1);
+    padding: 3px 8px;
+    border-radius: 10px;
+}
+
+.boat-price {
+    font-size: 16px;
+    color: #ffd700;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.boat-buy-btn {
+    background: #00ffff;
+    color: #0a1f2e;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.boat-buy-btn:hover {
+    background: #ffd700;
+    transform: scale(1.05);
+}
+
+.boat-buy-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+/* Sultan Shop */
+.sultan-shop {
+    margin-top: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #4a2a6e, #2a1a4e);
+    border-radius: 15px;
+    border: 3px solid #ffd700;
+}
+
+.sultan-shop h3 {
+    color: #ffd700;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+.sultan-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.sultan-item {
+    background: rgba(255,215,0,0.1);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid #ffd700;
+}
+
+.sultan-item-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.sultan-item-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffd700;
+    margin-bottom: 5px;
+}
+
+.sultan-item-desc {
+    font-size: 12px;
+    color: #ddd;
+    margin-bottom: 10px;
+}
+
+.sultan-item-price {
+    font-size: 20px;
+    color: #ffd700;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.sultan-item-btn {
+    background: #ffd700;
+    color: #0a1f2e;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.sultan-item-btn:hover {
+    background: #ffaa00;
+    transform: scale(1.05);
+}
+
+/* Underwater Exploration */
+.explore-container {
+    background: rgba(0,255,255,0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.explore-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.btn.ocean {
+    background: linear-gradient(135deg, #00ffff, #0088ff);
+    color: #0a1f2e;
+}
+
+.depth-indicator {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.depth-bar {
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(to bottom, #00aaff, #004488);
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    border: 2px solid #00ffff;
+}
+
+.depth-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffd700, #ffaa00);
+    transition: width 0.3s;
+    position: relative;
+}
+
+.depth-fill::after {
+    content: "🌊";
+    position: absolute;
+    right: 5px;
+    top: 2px;
+    font-size: 20px;
+}
+
+.treasure-hint {
+    text-align: center;
+    padding: 10px;
+    background: rgba(255,215,0,0.2);
+    border-radius: 10px;
+    color: #ffd700;
+    font-size: 14px;
+    margin-top: 10px;
+    animation: pulse 2s infinite;
+}
+
+/* Sultan Effects */
+@keyframes sultanGlow {
+    0% { box-shadow: 0 0 10px #ffd700; }
+    50% { box-shadow: 0 0 30px #ffd700, 0 0 50px #00ffff; }
+    100% { box-shadow: 0 0 10px #ffd700; }
+}
+
+.sultan-item {
+    animation: sultanGlow 3s infinite;
+}
+
+.boat-card[data-level="10"] .boat-icon {
+    animation: spin 5s infinite linear;
+}
+
+/* Oxygen Warning */
+.oxygen-low {
+    color: #ff4444;
+    animation: pulse 0.5s infinite;
+}
+
+.oxygen-critical {
+    color: #ff0000;
+    animation: pulse 0.2s infinite;
+}
